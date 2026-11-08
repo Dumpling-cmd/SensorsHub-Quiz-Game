@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="PF101 Knowledge Monitor: module-based quiz for the OOP midterm, Python Modules 5 to 8.">
+  <title>PF101 // Knowledge Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="status-bar">
+      <div class="sb-left">
+        <div class="status-item"><span class="dot live"></span>LIVE</div>
+      </div>
+      <div class="brand">PF101<span class="brand-sep">//</span>KNOWLEDGE MONITOR</div>
+      <div class="sb-right">
+        <div class="status-item hide-sm">T:<span class="val" data-clock>--:--:--</span></div>
+        <button class="ctrl" id="snd" type="button"></button>
+        <button class="ctrl" id="theme" type="button"></button>
+      </div>
+    </header>
+
+    <!-- ═══ HOME ═══ -->
+    <section id="home" class="screen on">
+      <div class="section-label">
+        <span class="sl-num">01</span>
+        <span class="sl-text">CHOOSE A MODE</span>
+        <span class="sl-meta"><span class="dot ok"></span><span data-count>00</span> SIGNALS LOADED</span>
+      </div>
+
+      <div class="hero">
+        <h1 class="hero-title">
+          <span class="hero-line">COGNITIVE</span>
+          <span class="hero-line">TELEMETRY</span>
+          <span class="hero-line accent">STATION</span>
+        </h1>
+        <div class="hero-bar"></div>
+        <p class="hero-lede">Practice Python topics from Modules 5–8. Questions from all four modules are mixed into each game. Choose a difficulty, then answer each question before time runs out.</p>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="solo">
+          <div class="mode-head">
+            <span class="mode-tag">CH-01</span>
+            <span class="status-pill"><span class="dot"></span>READY</span>
+          </div>
+          <div class="mode-title">SOLO RUN</div>
+          <div class="mode-desc">Up to 10 questions from Modules 5–8</div>
+          <div class="mode-meta">
+            <span>QUESTIONS <b>10</b></span>
+            <span>PLAYERS <b>1</b></span>
+          </div>
+          <div class="mode-enter">ENTER →</div>
+        </button>
+
+        <button class="mode-card" data-mode="pvp">
+          <div class="mode-head">
+            <span class="mode-tag">CH-02</span>
+            <span class="status-pill"><span class="dot"></span>READY</span>
+          </div>
+          <div class="mode-title">DUAL RUN</div>
+          <div class="mode-desc">Two players take turns answering questions</div>
+          <div class="mode-meta">
+            <span>QUESTIONS <b>UP TO 10 EACH</b></span>
+            <span>PLAYERS <b>2</b></span>
+          </div>
+          <div class="mode-enter">ENTER →</div>
+        </button>
+      </div>
+
+      <div class="quick-links">
+        <button data-go="bank">→ QUESTION BANK</button>
+        <button data-modal="rules">→ HOW TO PLAY</button>
+      </div>
+    </section>
+
+    <!-- ═══ SETUP ═══ -->
+    <section id="setup" class="screen">
+      <button class="back" data-go="home">← ABORT</button>
+      <div class="section-label">
+        <span class="sl-num">02</span>
+        <span class="sl-text">SESSION CONFIG</span>
+        <span class="sl-meta" id="s-title">—</span>
+      </div>
+
+      <p id="best" class="note"></p>
+
+      <form id="form" class="panel">
+        <div class="panel-header">
+          <span class="ph-tag">CFG</span>
+          <span class="ph-id">// PARAMETERS</span>
+          <span class="ph-meta"><span class="dot ok"></span>STANDBY</span>
+        </div>
+
+        <div class="form-body">
+          <label class="field">
+            <span class="field-label">OPERATOR ID</span>
+            <input id="n1" type="text" maxlength="20" required autocomplete="off" placeholder="ENTER NAME">
+            <span class="field-hint" id="n1-label">Your name</span>
+          </label>
+
+          <label class="field" id="p2">
+            <span class="field-label">CHANNEL-2 ID</span>
+            <input id="n2" type="text" maxlength="20" autocomplete="off" placeholder="PLAYER 2 NAME">
+            <span class="field-hint">Player 2 name</span>
+          </label>
+
+          <div class="field">
+            <span class="field-label">CHOOSE QUESTION DIFFICULTY</span>
+            <div class="diff">
+              <label><input type="radio" name="diff" value="Easy"><span><b>EASY</b><small>Basics · 20s</small></span></label>
+              <label><input type="radio" name="diff" value="Medium" checked><span><b>MEDIUM</b><small>Practice · 15s</small></span></label>
+              <label><input type="radio" name="diff" value="Hard"><span><b>HARD</b><small>Challenge · 12s</small></span></label>
+            </div>
+            <span class="field-hint" id="difficulty-hint">Easy: learn the basics. Medium: use what you know. Hard: solve a more challenging example. All questions come from Modules 5–8.</span>
+          </div>
+        </div>
+
+        <button class="big" type="submit">INITIATE SESSION →</button>
+      </form>
+    </section>
+
+    <!-- ═══ QUIZ ═══ -->
+    <section id="quiz" class="screen">
+      <div class="section-label">
+        <span class="sl-num">01</span>
+        <span class="sl-text">SIGNAL ACQUISITION</span>
+        <span class="sl-meta">RUN <b id="run-id">A7F3</b></span>
+      </div>
+
+      <div class="qmeta">
+        <span id="who">OPERATOR</span>
+        <span id="board">SCORE 0000</span>
+      </div>
+
+      <div class="telemetry-row">
+        <div class="tl-cell">
+          <div class="tl-label">PROGRESS</div>
+          <div class="tl-value"><span id="prog-cur">01</span><span class="muted">/</span><span id="prog-max">10</span></div>
+          <div class="tl-bar"><i id="prog-bar"></i></div>
+        </div>
+        <div class="tl-cell">
+          <div class="tl-label">
+            TIME LEFT
+            <span id="signal" class="signal s4" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          </div>
+          <div class="tl-value" id="clock">15.0<span class="unit">s</span></div>
+          <div class="tl-bar tick"><i id="drain"></i></div>
+        </div>
+        <div class="tl-cell">
+          <div class="tl-label">STREAK</div>
+          <div class="tl-value"><span class="accent">×</span><span id="streak">0</span></div>
+          <div class="tl-bar"><i id="streak-bar"></i></div>
+        </div>
+        <div class="tl-cell">
+          <div class="tl-label">SCORE</div>
+          <div class="tl-value" id="score">0000</div>
+          <svg id="score-spark" class="spark" viewBox="0 0 100 16" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+      </div>
+
+      <div class="panel question-panel">
+        <div class="panel-header">
+          <span class="ph-tag">Q.<span id="q-num">01</span></span>
+          <span class="ph-id">SIG:<span id="q-id">A4F2</span></span>
+          <div class="activity" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <span class="ph-meta"><span class="dot ok"></span>ACTIVE</span>
+        </div>
+
+        <div class="q-badges">
+          <span class="badge" id="cat">CATEGORY</span>
+          <span class="badge" id="diff">MEDIUM</span>
+          <button id="quit" class="badge-bad" type="button">✕ ABORT</button>
+        </div>
+
+        <h2 id="qtext" class="q-text"></h2>
+        <div class="q-segs" id="segs" aria-hidden="true"></div>
+      </div>
+
+      <div class="section-label tight">
+        <span class="sl-num">02</span>
+        <span class="sl-text">RESPONSE CHANNELS</span>
+        <span class="sl-meta">KEY A–D / 1–4</span>
+      </div>
+
+      <div id="answers" class="channels"></div>
+
+      <div class="panel log-panel">
+        <div class="panel-header">
+          <span class="ph-tag">LOG</span>
+          <span class="ph-id">// EVENT STREAM</span>
+          <span class="ph-meta"><span class="dot live"></span>LIVE</span>
+        </div>
+        <div id="log" class="log"></div>
+      </div>
+
+    </section>
+
+    <div id="sheet" class="sheet" hidden>
+      <div class="sheet-in">
+        <p id="feedback" aria-live="polite"></p>
+        <button id="next" class="big" type="button"></button>
+      </div>
+    </div>
+
+    <!-- ═══ HANDOFF ═══ -->
+    <section id="handoff" class="screen center">
+      <div class="section-label centered">
+        <span class="sl-num">03</span>
+        <span class="sl-text">CHANNEL SWITCH</span>
+      </div>
+      <p id="h-round" class="eyebrow"></p>
+      <h2 id="h-name"></h2>
+      <p class="note">Pass the terminal. Timer begins on trigger.</p>
+      <div class="row"><button id="ready" class="big narrow breathe" type="button">TRIGGER →</button></div>
+    </section>
+
+    <!-- ═══ RESULTS ═══ -->
+    <section id="results" class="screen">
+      <div class="section-label">
+        <span class="sl-num">04</span>
+        <span class="sl-text">SESSION REPORT</span>
+        <span class="sl-meta"><span class="dot ok"></span>COMPLETE</span>
+      </div>
+      <h2 id="r-title"></h2>
+      <div id="r-body"></div>
+      <div class="row">
+        <button id="again" class="big narrow" type="button">NEW SESSION →</button>
+        <button class="ghost" data-go="home">← TERMINAL</button>
+      </div>
+    </section>
+
+    <!-- ═══ BANK ═══ -->
+    <section id="bank" class="screen">
+      <button class="back" data-go="home">← TERMINAL</button>
+      <div class="section-label">
+        <span class="sl-num">05</span>
+        <span class="sl-text">QUESTION DATABASE</span>
+        <span class="sl-meta" id="bank-count">—</span>
+      </div>
+      <div id="module-filters" class="pills" aria-label="Filter by module"></div>
+      <div id="difficulty-filters" class="pills" aria-label="Filter by difficulty"></div>
+      <div id="blist" class="bank-list"></div>
+    </section>
+  </div>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button id="modal-close" class="close" aria-label="Close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
