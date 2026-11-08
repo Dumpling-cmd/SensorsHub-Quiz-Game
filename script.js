@@ -9,11 +9,11 @@ const pad = (n, len = 2) => String(n).padStart(len, '0');
 const hex = () => Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
 
 const ROUNDS = 10;
-const MODULES = [
-  { id: '5', title: 'Module 5 · Sequences and Strings', category: 'Sequences and Strings' },
-  { id: '6', title: 'Module 6 · Lists, Tuples, and Sets', category: 'Lists, Tuples, and Sets' },
-  { id: '7', title: 'Module 7 · Functions', category: 'Functions' },
-  { id: '8', title: 'Module 8 · Recursion, Iterators, and Modules', category: 'Recursion, Iterators, and Modules' }
+const TOPICS = [
+  { label: 'Strings', category: 'Sequences and Strings' },
+  { label: 'Lists, Tuples, and Sets', category: 'Lists, Tuples, and Sets' },
+  { label: 'Functions', category: 'Functions' },
+  { label: 'Recursion, Iterators, and Imports', category: 'Recursion, Iterators, and Modules' }
 ];
 const TIME = { Easy: 20, Medium: 15, Hard: 12 };
 
@@ -101,24 +101,17 @@ function openSetup(m) {
   $('#n1-label').textContent = m === 'solo' ? 'Your name' : 'Player 1 name';
   const b = load('pf101.bests', {}), f = v => v ? pad(v, 4) : '—';
   $('#best').textContent = m === 'pvp'
-    ? 'Players take turns on one screen. Questions cover all four modules and do not repeat.'
+    ? 'Players take turns on one screen. Questions do not repeat.'
     : `YOUR BEST · EASY ${f(b.Easy)} · MEDIUM ${f(b.Medium)} · HARD ${f(b.Hard)}`;
   updateDifficultyHint();
   show('setup');
 }
 
 /* ---------- round building ---------- */
-function questionsForModule(moduleId) {
-  if (moduleId === 'all') return QUESTIONS;
-  const module = MODULES.find(item => item.id === moduleId);
-  if (!module) throw new Error(`Unknown question module: ${moduleId}`);
-  return QUESTIONS.filter(q => q.cat === module.category);
-}
-
-function moduleForQuestion(question) {
-  const module = MODULES.find(item => item.category === question.cat);
-  if (!module) throw new Error(`Question has an unknown category: ${question.cat}`);
-  return module;
+function topicForQuestion(question) {
+  const topic = TOPICS.find(item => item.category === question.cat);
+  if (!topic) throw new Error(`Question has an unknown topic: ${question.cat}`);
+  return topic;
 }
 
 function updateDifficultyHint() {
@@ -129,19 +122,19 @@ function updateDifficultyHint() {
   const levelDescription = {
     Easy: 'Easy questions cover the basics.',
     Medium: 'Medium questions ask you to use what you learned.',
-    Hard: 'Hard questions take more thought and careful reading.'
+    Hard: 'Hard questions take more thought.'
   };
   const roundDescription = rounds === ROUNDS
     ? `Each player gets ${ROUNDS} questions.`
     : `Each player gets ${rounds} questions so no question repeats.`;
-  $('#difficulty-hint').textContent = `${levelDescription[difficulty]} ${roundDescription} Questions cover all four modules.`;
+  $('#difficulty-hint').textContent = `${levelDescription[difficulty]} ${roundDescription}`;
 }
 
 $$('input[name=diff]').forEach(input => input.addEventListener('change', updateDifficultyHint));
 
 function pick(diff, count) {
-  const groups = MODULES.map(module => shuffle(
-    QUESTIONS.filter(q => q.d === diff && q.cat === module.category)
+  const groups = TOPICS.map(topic => shuffle(
+    QUESTIONS.filter(q => q.d === diff && q.cat === topic.category)
   ));
   const out = [];
   while (out.length < count) {
@@ -177,7 +170,7 @@ $('#form').onsubmit = e => {
   show('quiz');
   $('#log').innerHTML = '';
   $('#run-id').textContent = game.runId;
-  logMsg(`SESSION INIT · ${mode.toUpperCase()} · MODULES 5–8 · ${diff.toUpperCase()}`, 'accent');
+  logMsg(`SESSION INIT · ${mode.toUpperCase()} · ${diff.toUpperCase()}`, 'accent');
   render();
 };
 
@@ -300,7 +293,7 @@ function render() {
   game.deadline = game.qStart + limit * 1000;
   $('#sheet').hidden = true;
 
-  $('#cat').textContent = `${moduleForQuestion(q).title}`.toUpperCase();
+  $('#cat').textContent = topicForQuestion(q).label.toUpperCase();
   $('#diff').textContent = q.d.toUpperCase();
   $('#q-id').textContent = hex();
   updateTelemetry();
@@ -318,7 +311,7 @@ function render() {
 
   renderHeader();
   setClock(limit, limit);
-  logMsg(`SIG ${pad(Math.floor(game.i / n) + 1)} ACQUIRED · ${q.cat.toUpperCase()}`, '');
+  logMsg(`SIG ${pad(Math.floor(game.i / n) + 1)} ACQUIRED · ${topicForQuestion(q).label.toUpperCase()}`, '');
 
   timer = setInterval(() => {
     game.left = Math.max(0, (game.deadline - performance.now()) / 1000);
@@ -533,7 +526,7 @@ function drawBank(level) {
   ).join('');
   $('#blist').innerHTML = qs.map(q => `
     <details>
-      <summary>${esc(q.q)}<small>${esc(moduleForQuestion(q).title)} · ${q.d.toUpperCase()}</small></summary>
+      <summary>${esc(q.q)}<small>${esc(topicForQuestion(q).label)} · ${q.d.toUpperCase()}</small></summary>
       <ol type="A">${q.a.map((a, k) =>
         `<li class="${k === q.c ? 'ok' : ''}">${esc(a)}${k === q.c ? ' ✓' : ''}</li>`
       ).join('')}</ol>
@@ -549,7 +542,7 @@ $('#difficulty-filters').addEventListener('click', e => {
 function openModal(kind) {
   if (kind === 'rules') {
     $('#modal-content').innerHTML = `<h2>OPERATOR MANUAL</h2><ul>
-      <li>Each player answers up to ${ROUNDS} questions from Modules 5–8. The chosen difficulty sets how challenging the questions are.</li>
+      <li>Each player answers up to ${ROUNDS} questions. The chosen difficulty sets how challenging they are.</li>
       <li>Correct response: 100 points + 5 per second remaining in sample window.</li>
       <li>Consecutive correct responses add up to 80 streak bonus points.</li>
       <li>Dual run uses channel switch: two operators, one terminal, no repeated signals.</li>
