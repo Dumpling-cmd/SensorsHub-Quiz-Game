@@ -379,7 +379,7 @@ function answer(k) {
     : n > 1 ? `PASS TO ${game.players[(game.i + 1) % n].name.toUpperCase()} →` : 'NEXT SIGNAL →';
 
   $('#sheet').hidden = false;
-  $('#next').focus();
+  $('#next').focus({ preventScroll: true });
 }
 
 $('#answers').addEventListener('click', e => {
