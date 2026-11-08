@@ -90,7 +90,7 @@ function show(id) {
   $('#sheet').hidden = true;
   $$('.screen').forEach(s => s.classList.toggle('on', s.id === id));
   window.scrollTo(0, 0);
-  if (id === 'bank') drawBank('all', 'All');
+  if (id === 'bank') drawBank('All');
 }
 
 function openSetup(m) {
@@ -521,20 +521,13 @@ function results() {
 }
 
 /* ---------- in-app question bank ---------- */
-let bankModule = 'all', bankDifficulty = 'All';
+let bankDifficulty = 'All';
 
-function drawBank(moduleId, level) {
-  bankModule = moduleId;
+function drawBank(level) {
   bankDifficulty = level;
-  const qs = questionsForModule(moduleId).filter(q => level === 'All' || q.d === level);
+  const qs = QUESTIONS.filter(q => level === 'All' || q.d === level);
   const bc = $('#bank-count');
   if (bc) bc.innerHTML = `<b>${pad(qs.length)}</b> / ${pad(QUESTIONS.length)}`;
-  $('#module-filters').innerHTML = [
-    { id: 'all', title: 'All Modules' },
-    ...MODULES.map(module => ({ id: module.id, title: module.title }))
-  ].map(module =>
-    `<button class="${module.id === moduleId ? 'on' : ''}" data-module="${module.id}">${esc(module.title)}</button>`
-  ).join('');
   $('#difficulty-filters').innerHTML = ['All','Easy','Medium','Hard'].map(difficulty =>
     `<button class="${difficulty === level ? 'on' : ''}" data-level="${difficulty}">${difficulty.toUpperCase()}</button>`
   ).join('');
@@ -547,13 +540,9 @@ function drawBank(moduleId, level) {
       <p>${esc(q.e)}</p>
     </details>`).join('');
 }
-$('#module-filters').addEventListener('click', e => {
-  const b = e.target.closest('[data-module]');
-  if (b) drawBank(b.dataset.module, bankDifficulty);
-});
 $('#difficulty-filters').addEventListener('click', e => {
   const b = e.target.closest('[data-level]');
-  if (b) drawBank(bankModule, b.dataset.level);
+  if (b) drawBank(b.dataset.level);
 });
 
 /* ---------- modal ---------- */
