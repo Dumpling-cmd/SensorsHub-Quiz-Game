@@ -2727,6 +2727,8 @@ details {
   color:#fff;
 }
 
+.hero-bar { display:none; }
+
 @media (prefers-reduced-motion:reduce) {
   .mode-card:hover,
   .answer:hover:not(:disabled) { transform:none; }
